@@ -44,7 +44,8 @@ ZEND_END_ARG_INFO()
 
 void make_regexp_on_pointcut (pointcut *pc) /*{{{*/
 {
-	pcre_extra *pcre_extra = NULL;
+	// pcre_extra *pcre_extra = NULL;
+	pcre2_code* pcre_extra = NULL;
 	int preg_options = 0;
 	zend_string *regexp;
 	zend_string *regexp_buffer = NULL;
@@ -83,7 +84,9 @@ void make_regexp_on_pointcut (pointcut *pc) /*{{{*/
 	zend_string_release(regexp_buffer);
 
 	regexp = zend_string_init(tempregexp, strlen(tempregexp), 0);
-	pc->re_method = pcre_get_compiled_regex(regexp, &pcre_extra, &preg_options);
+	// pc->re_method = pcre_get_compiled_regex(regexp, &pcre_extra, &preg_options);
+	uint32_t count;
+	pc->re_method = pcre_get_compiled_regex(regexp, &count);
 	zend_string_release(regexp);	
 
 	if (!pc->re_method) {
@@ -121,7 +124,8 @@ void make_regexp_on_pointcut (pointcut *pc) /*{{{*/
 		zend_string_release(regexp_buffer);
 
 		regexp = zend_string_init(tempregexp, strlen(tempregexp), 0);
-		pc->re_class = pcre_get_compiled_regex(regexp, &pcre_extra, &preg_options);
+		//pc->re_class = pcre_get_compiled_regex(regexp, &pcre_extra, &preg_options);
+		pc->re_class = pcre_get_compiled_regex(regexp, &count);
 		zend_string_release(regexp);
 
 		if (!pc->re_class) {
@@ -286,17 +290,20 @@ PHP_MINIT_FUNCTION(aop)
 
 	//2.overload zend_std_read_property and zend_std_write_property
 	original_zend_std_read_property = std_object_handlers.read_property;
-	std_object_handlers.read_property = aop_read_property;
+	//std_object_handlers.read_property = aop_read_property;
+	*(void **)&(std_object_handlers.read_property) = aop_read_property;
 
 	original_zend_std_write_property = std_object_handlers.write_property;
-	std_object_handlers.write_property = aop_write_property;
+	//std_object_handlers.write_property = aop_write_property;
+	*(void**)&(std_object_handlers.write_property) = aop_write_property;
 
 	/*
 	 * To avoid zendvm inc/dec property value directly
 	 * When get_property_ptr_ptr return NULL, zendvm will use write_property to inc/dec property value
 	 */
 	original_zend_std_get_property_ptr_ptr = std_object_handlers.get_property_ptr_ptr;
-	std_object_handlers.get_property_ptr_ptr = aop_get_property_ptr_ptr;
+	//std_object_handlers.get_property_ptr_ptr = aop_get_property_ptr_ptr;
+	*(void**)&(std_object_handlers.get_property_ptr_ptr) = aop_get_property_ptr_ptr;
 
 	register_class_AopJoinPoint();
 

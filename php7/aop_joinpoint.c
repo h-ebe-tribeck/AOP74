@@ -99,11 +99,14 @@ static inline void _zend_assign_to_variable_reference(zval *variable_ptr, zval *
     }
 
     ref = Z_REF_P(value_ptr);
-    GC_REFCOUNT(ref)++;
+    //GC_REFCOUNT(ref)++;
+    GC_SET_REFCOUNT(ref, GC_REFCOUNT(ref) + 1);
     if (Z_REFCOUNTED_P(variable_ptr)) {
         zend_refcounted *garbage = Z_COUNTED_P(variable_ptr);
 
-        if (--GC_REFCOUNT(garbage) == 0) {
+        //if (--GC_REFCOUNT(garbage) == 0) {
+        GC_SET_REFCOUNT(garbage, GC_REFCOUNT(garbage) - 1);
+        if (GC_REFCOUNT(garbage) == 0) {
             ZVAL_REF(variable_ptr, ref);
             zval_dtor_func_for_ptr(garbage);
             return;

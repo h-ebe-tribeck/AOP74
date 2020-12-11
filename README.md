@@ -1,3 +1,9 @@
+# 概要 #
+
+これは、 https://github.com/pangudashu/AOP を PHP 7.4 に対応させられないかを試すプロジェクトです。
+
+---
+
 # Introduction #
 
 AOP is a PECL extension that enables you to use Aspect Oriented Programming in PHP, without the need

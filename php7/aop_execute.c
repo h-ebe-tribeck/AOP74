@@ -74,7 +74,8 @@ static int pointcut_match_zend_class_entry(pointcut *pc, zend_class_entry *ce) /
     }
     
     for (i = 0; i < (int) ce->num_traits; i++) {
-        matches = pcre_exec(pc->re_class, NULL, ZSTR_VAL(ce->traits[i]->name), ZSTR_LEN(ce->traits[i]->name), 0, 0, NULL, 0);
+        //matches = pcre_exec(pc->re_class, NULL, ZSTR_VAL(ce->traits[i]->name), ZSTR_LEN(ce->traits[i]->name), 0, 0, NULL, 0);
+        matches = pcre_exec(pc->re_class, NULL, ce->trait_names[i], ce->trait_names[i], 0, 0, NULL, 0);
         if (matches>=0) {
             return 1;
         }
