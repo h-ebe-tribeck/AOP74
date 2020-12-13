@@ -82,9 +82,9 @@ typedef struct {
 	zend_fcall_info_cache fci_cache;
 	
 	// pcre *re_method;
-	void * re_method;
+	pcre2_code *re_method;
 	// pcre *re_class;
-	void * re_class;
+	pcre2_code *re_class;
 } pointcut;
 
 typedef struct {
@@ -125,6 +125,7 @@ ZEND_API void aop_execute_internal(zend_execute_data *execute_data, zval *return
 void do_func_execute(HashPosition pos, zend_array *pointcut_table, zend_execute_data *ex, zval *object);
 void do_read_property(HashPosition pos, zend_array *pointcut_table, zval *aop_object);
 void do_write_property(HashPosition pos, zend_array *pointcut_table, zval *aop_object);
+
 
 zend_object_read_property_t			original_zend_std_read_property;
 zend_object_write_property_t		original_zend_std_write_property;

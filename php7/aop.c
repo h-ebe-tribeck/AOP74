@@ -41,12 +41,10 @@ ZEND_BEGIN_ARG_INFO_EX(arginfo_aop_add, 0, 0, 2)
 	ZEND_ARG_INFO(0, advice)
 ZEND_END_ARG_INFO()
 
-
 void make_regexp_on_pointcut (pointcut *pc) /*{{{*/
 {
 	// pcre_extra *pcre_extra = NULL;
-	pcre2_code* pcre_extra = NULL;
-	int preg_options = 0;
+	// int preg_options = 0;
 	zend_string *regexp;
 	zend_string *regexp_buffer = NULL;
 	zend_string *regexp_tmp = NULL;
@@ -85,8 +83,7 @@ void make_regexp_on_pointcut (pointcut *pc) /*{{{*/
 
 	regexp = zend_string_init(tempregexp, strlen(tempregexp), 0);
 	// pc->re_method = pcre_get_compiled_regex(regexp, &pcre_extra, &preg_options);
-	uint32_t count;
-	pc->re_method = pcre_get_compiled_regex(regexp, &count);
+	pc->re_method = pcre_get_compiled_regex(regexp, 0);
 	zend_string_release(regexp);	
 
 	if (!pc->re_method) {
@@ -125,7 +122,7 @@ void make_regexp_on_pointcut (pointcut *pc) /*{{{*/
 
 		regexp = zend_string_init(tempregexp, strlen(tempregexp), 0);
 		//pc->re_class = pcre_get_compiled_regex(regexp, &pcre_extra, &preg_options);
-		pc->re_class = pcre_get_compiled_regex(regexp, &count);
+		pc->re_class = pcre_get_compiled_regex(regexp, 0);
 		zend_string_release(regexp);
 
 		if (!pc->re_class) {
@@ -280,7 +277,7 @@ PHP_INI_END()
 PHP_MINIT_FUNCTION(aop)
 {
 	REGISTER_INI_ENTRIES();
-	
+
 	//1.overload zend_execute_ex and zend_execute_internal
 	original_zend_execute_ex = zend_execute_ex;
 	zend_execute_ex = aop_execute_ex;
@@ -587,4 +584,3 @@ ZEND_GET_MODULE(aop)
  * vim600: noet sw=4 ts=4 fdm=marker
  * vim<600: noet sw=4 ts=4
  */
-
