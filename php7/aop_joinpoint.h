@@ -43,7 +43,7 @@ typedef struct {
 
 extern zend_class_entry *aop_joinpoint_ce;
 
-void register_class_AopJoinPoint(void);
+void register_class_AopJoinPoint(zend_object_handlers *);
 
 PHP_METHOD(AopJoinpoint, getArguments); //done
 PHP_METHOD(AopJoinpoint, getPropertyName);//done

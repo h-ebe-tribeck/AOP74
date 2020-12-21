@@ -132,7 +132,7 @@ zend_object_write_property_t		original_zend_std_write_property;
 zend_object_get_property_ptr_ptr_t	original_zend_std_get_property_ptr_ptr;
 
 zval *aop_read_property(zval *object, zval *member, int type, void **cache_slot, zval *rv);
-void aop_write_property(zval *object, zval *member, zval *value, void **cache_slot);
+zval *aop_write_property(zval *object, zval *member, zval *value, void **cache_slot);
 zval *aop_get_property_ptr_ptr(zval *object, zval *member, int type, void **cache_slot);
 
 void free_pointcut_cache(zval *elem);

@@ -129,14 +129,15 @@ zend_object *aop_create_handler_JoinPoint(zend_class_entry *ce) /*{{{*/
 }
 /*}}}*/
 
-void register_class_AopJoinPoint(void) /*{{{*/
+void register_class_AopJoinPoint(zend_object_handlers *p_zend_object_handlers) /*{{{*/
 {
     zend_class_entry ce;
     INIT_CLASS_ENTRY(ce, "AopJoinpoint", aop_joinpoint_methods);
     aop_joinpoint_ce = zend_register_internal_class(&ce);
 
     aop_joinpoint_ce->create_object = aop_create_handler_JoinPoint;
-    memcpy(&AopJoinpoint_object_handlers, zend_get_std_object_handlers(), sizeof(zend_object_handlers));
+    //memcpy(&AopJoinpoint_object_handlers, zend_get_std_object_handlers(), sizeof(zend_object_handlers));
+    memcpy(&AopJoinpoint_object_handlers, p_zend_object_handlers, sizeof(zend_object_handlers));
     AopJoinpoint_object_handlers.clone_obj = NULL;
     AopJoinpoint_object_handlers.free_obj = aop_free_JoinPoint;
 }

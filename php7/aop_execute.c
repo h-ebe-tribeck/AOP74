@@ -945,7 +945,7 @@ void do_write_property(HashPosition pos, zend_array *pointcut_table, zval *aop_o
 }
 /*}}}*/
 
-void aop_write_property(zval *object, zval *member, zval *value, void **cache_slot) /*{{{*/
+zval *aop_write_property(zval *object, zval *member, zval *value, void **cache_slot) /*{{{*/
 {
     zval aop_object;
     AopJoinpoint_object *joinpoint;
@@ -959,7 +959,7 @@ void aop_write_property(zval *object, zval *member, zval *value, void **cache_sl
     pointcut_table = get_cache_property(object, member, AOP_KIND_WRITE);
     if (pointcut_table == NULL || zend_hash_num_elements(pointcut_table) == 0) {
         original_zend_std_write_property(object, member, value, cache_slot);
-        return ;
+        return member;
     }
     zend_hash_internal_pointer_reset_ex(pointcut_table, &pos);
         
@@ -981,6 +981,7 @@ void aop_write_property(zval *object, zval *member, zval *value, void **cache_sl
     AOP_G(lock_write_property)--;
 
     zval_ptr_dtor(&aop_object);
+    return member;
 }
 /*}}}*/
 
